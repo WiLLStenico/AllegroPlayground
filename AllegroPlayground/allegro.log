@@ -1,6 +1,6 @@
-system   D            wsystem.c:583  maybe_parent_dir                 [   0.00033] Also searching C:\Users\WiLL\workspace\AllegroPlayground\
-system   D            wsystem.c:633  _al_win_safe_load_library        [   0.00054] PathFindOnPath found: C:\Windows\system32\d3d9.dll
-system   D            wsystem.c:544  load_library_at_path             [   0.00056] Calling LoadLibrary C:\Windows\system32\d3d9.dll
-system   I            wsystem.c:547  load_library_at_path             [   0.00199] Loaded C:\Windows\system32\d3d9.dll
-d3d      I         d3d_disp.cpp:695  _al_d3d_init_display             [   0.01783] Render-to-texture: 1
-system   I             system.c:272  al_install_system                [   0.01786] Allegro version: 5.0.8
+system   D            wsystem.c:583  maybe_parent_dir                 [   0.00029] Also searching C:\Users\WiLL\git\AllegroPlayground\AllegroPlayground\
+system   D            wsystem.c:633  _al_win_safe_load_library        [   0.00051] PathFindOnPath found: C:\Windows\system32\d3d9.dll
+system   D            wsystem.c:544  load_library_at_path             [   0.00053] Calling LoadLibrary C:\Windows\system32\d3d9.dll
+system   I            wsystem.c:547  load_library_at_path             [   0.00195] Loaded C:\Windows\system32\d3d9.dll
+d3d      I         d3d_disp.cpp:695  _al_d3d_init_display             [   0.01786] Render-to-texture: 1
+system   I             system.c:272  al_install_system                [   0.01790] Allegro version: 5.0.8
