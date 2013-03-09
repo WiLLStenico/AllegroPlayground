@@ -35,7 +35,7 @@
 							<tool id="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug.2079538524" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.mingw.exe.debug">
 								<option defaultValue="gnu.c.optimization.level.none" id="gnu.c.compiler.mingw.exe.debug.option.optimization.level.845888309" name="Optimization Level" superClass="gnu.c.compiler.mingw.exe.debug.option.optimization.level" valueType="enumerated"/>
 								<option id="gnu.c.compiler.mingw.exe.debug.option.debugging.level.2128396944" name="Debug Level" superClass="gnu.c.compiler.mingw.exe.debug.option.debugging.level" value="gnu.c.debugging.level.max" valueType="enumerated"/>
-								<option id="gnu.c.compiler.option.include.paths.954377222" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
+								<option id="gnu.c.compiler.option.include.paths.954377222" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ALLEGRO_HOME}\include&quot;"/>
 								</option>
 								<inputType id="cdt.managedbuild.tool.gnu.c.compiler.input.762397195" superClass="cdt.managedbuild.tool.gnu.c.compiler.input"/>
@@ -47,6 +47,10 @@
 								</option>
 								<option id="gnu.cpp.link.option.libs.991208355" name="Libraries (-l)" superClass="gnu.cpp.link.option.libs" valueType="libs">
 									<listOptionValue builtIn="false" value="allegro-5.0.8-md-debug"/>
+									<listOptionValue builtIn="false" value="allegro_font-5.0.8-md-debug"/>
+									<listOptionValue builtIn="false" value="allegro_font-5.0.8-md"/>
+									<listOptionValue builtIn="false" value="allegro_ttf-5.0.8-md-debug"/>
+									<listOptionValue builtIn="false" value="allegro_ttf-5.0.8-md"/>
 									<listOptionValue builtIn="false" value="allegro-5.0.8-md"/>
 									<listOptionValue builtIn="false" value="allegro_dialog-5.0.8-md"/>
 								</option>
