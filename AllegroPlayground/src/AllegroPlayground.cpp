@@ -19,6 +19,7 @@
 
 using namespace std;
 
+enum KEYS{ UP, DOWN, LEFT, RIGHT};
 
 /*All inits here*/
 void inits(){
@@ -29,6 +30,9 @@ void inits(){
 	al_init_primitives_addon();
 	al_init_font_addon();
 	al_init_ttf_addon();
+
+	al_install_keyboard();
+	al_install_mouse();
 }
 
 /*draw some lines*/
@@ -47,9 +51,12 @@ int main() {
 
 	ALLEGRO_DISPLAY *display = NULL;
 
+	int width = 1024;
+	int height = 768;
+
 	inits();
 
-	display= al_create_display(1024,768);
+	display= al_create_display(width,height);
 
 	if(!display){
 		al_show_native_message_box(NULL,NULL,NULL,"Failed to init Allegro",NULL,NULL);
@@ -80,21 +87,20 @@ int main() {
 	//============================== Display ================================
 
 	al_flip_display();//swap buffers to prevent flicker
-	al_rest(5.0); //Timer de n segundos
+	al_rest(2.0); //Timer de n segundos
 
 	//=============================== Primitives =============================
 
-	int width = 640;
-	int height = 480;
+
 
 	al_clear_to_color(al_map_rgb(50,50,50)); //coloring back buffer
 	lines(width);
 	al_draw_triangle(10, 200, 100, 10, 190, 200, al_map_rgb(255, 0, 255), 5);
 	al_draw_filled_triangle(300, 400, 400, 200, 500, 400, al_map_rgb(0, 0, 255));
 
-	al_draw_rectangle(10, 10, 250, 250, al_map_rgb(255, 0, 255), 5);
+	al_draw_rectangle(20, 10, 250, 250, al_map_rgb(255, 0, 255), 5);
 	al_draw_rounded_rectangle(width - 200, 10, width - 10, 50, 5, 5, al_map_rgb(0, 0, 255), 15);
-	al_draw_filled_rectangle(10, 280, 250, height - 10, al_map_rgb(255, 255, 255));
+	al_draw_filled_rectangle(30, 280, 250, height - 10, al_map_rgb(255, 255, 255));
 	al_draw_filled_rounded_rectangle(width - 200, 180, width - 10, height - 10, 10, 10,  al_map_rgb(0, 255, 0));
 
 	al_draw_circle(100, 100, 50, al_map_rgb(255, 255, 0), 7);
@@ -103,14 +109,119 @@ int main() {
 	al_draw_ellipse(150, 100, 100, 50, al_map_rgb(127, 3, 34), 7);
 	al_draw_filled_ellipse(400, 250, 100, 200, al_map_rgb(0, 255, 255));
 
-	float points[] = {0, 0, 400, 100, 50, 200, width, height};
+	float points[] = {0, 20, 400, 100, 50, 200, width, height};
 	al_draw_spline(points, al_map_rgb(255, 0, 255), 0);
 
 	float points2[] = {100, height, 200, 100, 400, 200, width, height};
 	al_draw_spline(points2, al_map_rgb(0, 0, 255), 3);
 
 	al_flip_display();//swap buffers to prevent flicker
-	al_rest(5.0); //Timer de n segundos
+	al_rest(2.0); //Timer de n segundos
+
+	//========================= Inputs ======================================
+
+	al_clear_to_color(al_map_rgb(0,0,0));
+	al_flip_display();//swap buffers to prevent flicker
+
+	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
+
+	bool keys[4] = {false, false, false, false};
+
+	bool done = false;
+	bool draw = true;
+	int pos_x = width / 2;
+	int pos_y = height / 2;
+
+	event_queue = al_create_event_queue();
+
+	al_register_event_source(event_queue, al_get_keyboard_event_source());
+
+	//Pega os eventos do display, por exemplo o click do botao X do display
+	al_register_event_source(event_queue, al_get_display_event_source(display));
+
+	al_register_event_source(event_queue, al_get_mouse_event_source());
+
+	al_hide_mouse_cursor(display);
+	//al_show_mouse_cursor(display);
+	while(!done)
+	{
+		ALLEGRO_EVENT ev;
+		al_wait_for_event(event_queue, &ev);
+
+		if(ev.type == ALLEGRO_EVENT_KEY_DOWN)
+		{
+			switch(ev.keyboard.keycode)
+			{
+			case ALLEGRO_KEY_UP:
+				keys[UP] = true;
+				break;
+			case ALLEGRO_KEY_DOWN:
+				keys[DOWN] = true;
+				break;
+			case ALLEGRO_KEY_RIGHT:
+				keys[RIGHT] = true;
+				break;
+			case ALLEGRO_KEY_LEFT:
+				keys[LEFT] = true;
+				break;
+			}
+		}
+		else if(ev.type == ALLEGRO_EVENT_KEY_UP)
+		{
+			switch(ev.keyboard.keycode)
+			{
+			case ALLEGRO_KEY_UP:
+				keys[UP] = false;
+				break;
+			case ALLEGRO_KEY_DOWN:
+				keys[DOWN] = false;
+				break;
+			case ALLEGRO_KEY_RIGHT:
+				keys[RIGHT] = false;
+				break;
+			case ALLEGRO_KEY_LEFT:
+				keys[LEFT] = false;
+				break;
+			case ALLEGRO_KEY_ESCAPE:
+				done = true;
+				break;
+			}
+		}
+		else if(ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+		{
+			done = true;
+		}
+		else if(ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+		{
+			if(ev.mouse.button & 1) //Botão esquerdo
+				draw = !draw;
+			else if (ev.mouse.button & 2) //Botão direito
+				done = true;
+		}
+		else if(ev.type == ALLEGRO_EVENT_MOUSE_AXES)
+		{
+			pos_x = ev.mouse.x;
+			pos_y = ev.mouse.y;
+		}
+
+		pos_y -= keys[UP] * 10; //Se TRUE multiplica
+		pos_y += keys[DOWN] * 10;
+		pos_x -= keys[LEFT] * 10;
+		pos_x += keys[RIGHT] * 10;
+
+		if(draw)
+			al_draw_filled_rectangle(pos_x, pos_y, pos_x + 30, pos_y + 30, al_map_rgb(255, 0, 255));
+
+		al_draw_filled_rectangle(pos_x, pos_y, pos_x + 30, pos_y + 30, al_map_rgb(255,0,255));
+		al_flip_display();
+		al_clear_to_color(al_map_rgb(0,0,0));
+	}
+
+
+
+
+
+
 
 
 	//========================= Destroys ====================================
@@ -118,6 +229,7 @@ int main() {
 	al_destroy_font(font24);
 	al_destroy_font(font36);
 	al_destroy_display(display);
+	al_destroy_event_queue(event_queue);
 
 	return 0;
 }
