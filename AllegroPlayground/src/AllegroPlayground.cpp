@@ -69,9 +69,9 @@ int main() {
 	//=============================== Fonts ==================================
 
 
-	ALLEGRO_FONT *font24 = al_load_font("Resources//cactus.ttf", 24, 0);
-	ALLEGRO_FONT *font36 = al_load_font("Resources//cactus.ttf", 36, 0);
-	ALLEGRO_FONT *font18 = al_load_font("Resources//cactus.ttf", 18, 0);
+	ALLEGRO_FONT *font24 = al_load_font("Resources//fonts//cactus.ttf", 24, 0);
+	ALLEGRO_FONT *font36 = al_load_font("Resources//fonts//cactus.ttf", 36, 0);
+	ALLEGRO_FONT *font18 = al_load_font("Resources//fonts//arial.ttf", 18, 0);
 
 	al_draw_text(font24, al_map_rgb(255, 0, 255), 50, 50, 0, "Hello World, this is 24 point");
 	al_draw_text(font36, al_map_rgb(255, 127, 127), 640 / 2, 480 / 2, ALLEGRO_ALIGN_CENTRE, "This is Centered and 36 point");
@@ -124,13 +124,19 @@ int main() {
 	al_flip_display();//swap buffers to prevent flicker
 
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
+	ALLEGRO_TIMER *timer = NULL;
 
 	bool keys[4] = {false, false, false, false};
 
 	bool done = false;
 	bool draw = true;
+	//bool redraw = true;
+
 	int pos_x = width / 2;
 	int pos_y = height / 2;
+
+	int FPS = 60;
+	int count = 0;
 
 	event_queue = al_create_event_queue();
 
@@ -139,7 +145,13 @@ int main() {
 	//Pega os eventos do display, por exemplo o click do botao X do display
 	al_register_event_source(event_queue, al_get_display_event_source(display));
 
+	//================ Timer ================
 	al_register_event_source(event_queue, al_get_mouse_event_source());
+	timer = al_create_timer(1.0 / FPS);
+	al_register_event_source(event_queue, al_get_timer_event_source(timer));
+
+	al_start_timer(timer);
+
 
 	al_hide_mouse_cursor(display);
 	//al_show_mouse_cursor(display);
@@ -165,6 +177,8 @@ int main() {
 				keys[LEFT] = true;
 				break;
 			}
+
+
 		}
 		else if(ev.type == ALLEGRO_EVENT_KEY_UP)
 		{
@@ -203,11 +217,33 @@ int main() {
 			pos_x = ev.mouse.x;
 			pos_y = ev.mouse.y;
 		}
+		else if(ev.type == ALLEGRO_EVENT_TIMER)
+		{
+			pos_y -= keys[UP] * 10;
+			pos_y += keys[DOWN] * 10;
+			pos_x -= keys[LEFT] * 10;
+			pos_x += keys[RIGHT] * 10;
 
-		pos_y -= keys[UP] * 10; //Se TRUE multiplica
+			//redraw = true;
+		}
+
+		/*if(redraw && al_is_event_queue_empty(event_queue))
+		{
+			redraw = false;
+
+			al_draw_filled_rectangle(pos_x, pos_y, pos_x + 30, pos_y + 30, al_map_rgb(255,0,255));
+			al_draw_textf(font18, al_map_rgb(255, 255, 255), width / 2, height / 2, ALLEGRO_ALIGN_CENTRE,
+					"Frames: %i", count);
+			al_flip_display();
+			al_clear_to_color(al_map_rgb(0,0,0));
+			count++;
+		}
+*/
+		/*pos_y -= keys[UP] * 10;
 		pos_y += keys[DOWN] * 10;
 		pos_x -= keys[LEFT] * 10;
-		pos_x += keys[RIGHT] * 10;
+		pos_x += keys[RIGHT] * 10;*/
+
 
 		if(draw)
 			al_draw_filled_rectangle(pos_x, pos_y, pos_x + 30, pos_y + 30, al_map_rgb(255, 0, 255));
@@ -215,21 +251,22 @@ int main() {
 		al_draw_filled_rectangle(pos_x, pos_y, pos_x + 30, pos_y + 30, al_map_rgb(255,0,255));
 		al_flip_display();
 		al_clear_to_color(al_map_rgb(0,0,0));
+
+		count++;
+
+		al_draw_textf(font18, al_map_rgb(255, 255, 255), width / 2, height / 2, ALLEGRO_ALIGN_CENTRE,
+				"Frames: %i", count);
+
 	}
-
-
-
-
-
-
 
 
 	//========================= Destroys ====================================
 	al_destroy_font(font18);
 	al_destroy_font(font24);
 	al_destroy_font(font36);
-	al_destroy_display(display);
 	al_destroy_event_queue(event_queue);
+	al_destroy_timer(timer);
+	al_destroy_display(display);
 
 	return 0;
 }
