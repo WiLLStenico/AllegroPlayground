@@ -14,6 +14,7 @@
 #include <allegro5/allegro_ttf.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/joystick.h>
 
 
 
@@ -33,6 +34,7 @@ void inits(){
 
 	al_install_keyboard();
 	al_install_mouse();
+	al_install_joystick();
 }
 
 /*draw some lines*/
@@ -145,6 +147,9 @@ int main() {
 	//Pega os eventos do display, por exemplo o click do botao X do display
 	al_register_event_source(event_queue, al_get_display_event_source(display));
 
+	al_register_event_source(event_queue, al_get_joystick_event_source());
+
+
 	//================ Timer ================
 	al_register_event_source(event_queue, al_get_mouse_event_source());
 	timer = al_create_timer(1.0 / FPS);
@@ -155,10 +160,16 @@ int main() {
 
 	al_hide_mouse_cursor(display);
 	//al_show_mouse_cursor(display);
+
+	ALLEGRO_JOYSTICK *joy = al_get_joystick(0);
+
+	ALLEGRO_JOYSTICK_STATE joyState;
+
 	while(!done)
 	{
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
+		al_get_joystick_state(joy, &joyState);
 
 		if(ev.type == ALLEGRO_EVENT_KEY_DOWN)
 		{
@@ -217,6 +228,41 @@ int main() {
 			pos_x = ev.mouse.x;
 			pos_y = ev.mouse.y;
 		}
+		else  if (ev.type == ALLEGRO_EVENT_JOYSTICK_AXIS)
+		{
+			if (ev.joystick.axis == 0) //x
+			{
+				//pos_x += ev.joystick.pos* 10;
+				keys[LEFT] = ev.joystick.pos < 0;
+				keys[RIGHT] = ev.joystick.pos > 0;
+
+			}
+			else if (ev.joystick.axis == 1)//y
+			{
+				keys[UP] = ev.joystick.pos < 0;
+				keys[DOWN] = ev.joystick.pos > 0;
+			}
+
+		}
+		else if (ev.type == ALLEGRO_EVENT_JOYSTICK_BUTTON_DOWN)
+		{
+			switch (ev.joystick.button)
+			{
+			case 1:
+				//cor = al_map_rgb(255, 0, 0);
+				break;
+			case 2:
+				//cor = al_map_rgb(0, 0, 255);
+				break;
+			case 3:
+				//cor = al_map_rgb(0, 255, 0);
+				break;
+			case 0:
+			default:
+				//cor = al_map_rgb(255, 255, 255);
+				break;
+			}
+		}
 		else if(ev.type == ALLEGRO_EVENT_TIMER)
 		{
 			pos_y -= keys[UP] * 10;
@@ -226,24 +272,6 @@ int main() {
 
 			//redraw = true;
 		}
-
-		/*if(redraw && al_is_event_queue_empty(event_queue))
-		{
-			redraw = false;
-
-			al_draw_filled_rectangle(pos_x, pos_y, pos_x + 30, pos_y + 30, al_map_rgb(255,0,255));
-			al_draw_textf(font18, al_map_rgb(255, 255, 255), width / 2, height / 2, ALLEGRO_ALIGN_CENTRE,
-					"Frames: %i", count);
-			al_flip_display();
-			al_clear_to_color(al_map_rgb(0,0,0));
-			count++;
-		}
-*/
-		/*pos_y -= keys[UP] * 10;
-		pos_y += keys[DOWN] * 10;
-		pos_x -= keys[LEFT] * 10;
-		pos_x += keys[RIGHT] * 10;*/
-
 
 		if(draw)
 			al_draw_filled_rectangle(pos_x, pos_y, pos_x + 30, pos_y + 30, al_map_rgb(255, 0, 255));
