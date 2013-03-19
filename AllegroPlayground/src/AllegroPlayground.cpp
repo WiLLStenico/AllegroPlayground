@@ -134,6 +134,8 @@ int main() {
 	bool draw = true;
 	//bool redraw = true;
 
+	ALLEGRO_COLOR color = al_map_rgb(255,0,255);
+
 	int pos_x = width / 2;
 	int pos_y = height / 2;
 
@@ -249,17 +251,19 @@ int main() {
 			switch (ev.joystick.button)
 			{
 			case 1:
-				//cor = al_map_rgb(255, 0, 0);
+				color = al_map_rgb(255, 0, 0);
 				break;
 			case 2:
-				//cor = al_map_rgb(0, 0, 255);
+				color = al_map_rgb(0, 0, 255);
 				break;
 			case 3:
-				//cor = al_map_rgb(0, 255, 0);
+				color = al_map_rgb(0, 255, 0);
 				break;
 			case 0:
+				color = al_map_rgb(255, 0, 255);
+				break;
 			default:
-				//cor = al_map_rgb(255, 255, 255);
+				color = al_map_rgb(255, 255, 255);
 				break;
 			}
 		}
@@ -273,10 +277,10 @@ int main() {
 			//redraw = true;
 		}
 
-		if(draw)
+		/*if(draw)
 			al_draw_filled_rectangle(pos_x, pos_y, pos_x + 30, pos_y + 30, al_map_rgb(255, 0, 255));
-
-		al_draw_filled_rectangle(pos_x, pos_y, pos_x + 30, pos_y + 30, al_map_rgb(255,0,255));
+		 */
+		al_draw_filled_rectangle(pos_x, pos_y, pos_x + 30, pos_y + 30, color);
 		al_flip_display();
 		al_clear_to_color(al_map_rgb(0,0,0));
 
