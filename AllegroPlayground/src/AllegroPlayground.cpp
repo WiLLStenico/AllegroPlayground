@@ -163,15 +163,20 @@ int main() {
 	al_hide_mouse_cursor(display);
 	//al_show_mouse_cursor(display);
 
-	ALLEGRO_JOYSTICK *joy = al_get_joystick(0);
-
+	ALLEGRO_JOYSTICK *joy =NULL;
+	if(al_get_num_joysticks()> 0){
+		joy = al_get_joystick(0);
+	}
 	ALLEGRO_JOYSTICK_STATE joyState;
 
 	while(!done)
 	{
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
-		al_get_joystick_state(joy, &joyState);
+
+		if(joy != NULL){
+			al_get_joystick_state(joy, &joyState);
+		}
 
 		if(ev.type == ALLEGRO_EVENT_KEY_DOWN)
 		{
