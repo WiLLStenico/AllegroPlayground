@@ -49,7 +49,7 @@ void lines(int width){
 }
 
 
-int main() {
+int main2() {
 
 	ALLEGRO_DISPLAY *display = NULL;
 
